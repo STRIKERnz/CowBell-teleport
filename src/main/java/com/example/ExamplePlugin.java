@@ -3,18 +3,24 @@ package com.example;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.Player;
+import net.runelite.api.SoundEffectID;
+import net.runelite.api.events.AnimationChanged;
+import net.runelite.api.events.SoundEffectPlayed;
+import net.runelite.api.events.AreaSoundEffectPlayed;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 
+import java.util.Set;
+
 @Slf4j
 @PluginDescriptor(
-	name = "Example"
+		name = "Cowbell Teleport",
+		description = "Replace teleport animations with the cowbell amulet teleport animation",
+		tags = {"animation", "teleport"}
 )
 public class ExamplePlugin extends Plugin
 {
@@ -24,24 +30,127 @@ public class ExamplePlugin extends Plugin
 	@Inject
 	private ExampleConfig config;
 
+	// Simple flag to know when a teleport is in progress
+	private boolean teleporting = false;
+
+	private static final Set<Integer> TELEPORT_SOUND_IDS = Set.of(
+			SoundEffectID.TELEPORT_VWOOP,
+			197, // Ancient teleport group sound
+			965
+	);
+
 	@Override
-	protected void startUp() throws Exception
+	protected void startUp()
 	{
-		log.debug("Example started!");
+		log.debug("Cowbell Teleport started");
+		teleporting = false;
 	}
 
 	@Override
-	protected void shutDown() throws Exception
+	protected void shutDown()
 	{
-		log.debug("Example stopped!");
+		log.debug("Cowbell Teleport stopped");
+		teleporting = false;
 	}
 
 	@Subscribe
-	public void onGameStateChanged(GameStateChanged gameStateChanged)
+	public void onAnimationChanged(AnimationChanged event)
 	{
-		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
+		if (!config.enabled())
+			return;
+
+		if (event.getActor() != client.getLocalPlayer())
+			return;
+
+		Player player = client.getLocalPlayer();
+		int animationId = player.getAnimation();
+
+		// ---- Arrival Detection ----
+		// Teleport finishes when animation becomes -1 (idle)
+		if (teleporting && animationId == -1)
 		{
-			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says " + config.greeting(), null);
+			teleporting = false;
+
+			// Replay cowbell arrival animation + splash
+			player.setAnimation(config.cowbellAnimationId());
+
+			if (config.showTeleportGraphic())
+			{
+				player.setGraphic(config.cowbellGraphicId());
+			}
+
+			log.debug("Played arrival milk splash");
+			return;
+		}
+
+		// Prevent overriding our own animation
+		if (animationId == config.cowbellAnimationId())
+			return;
+
+		// ---- Teleport Start Detection ----
+		if (!AnimationConstants.isTeleportAnimation(animationId))
+			return;
+
+		if (!shouldOverride(animationId))
+			return;
+
+		teleporting = true;
+
+		// Replace animation
+		player.setAnimation(config.cowbellAnimationId());
+
+		// Play milk splash at start
+		if (config.showTeleportGraphic())
+		{
+			player.setGraphic(config.cowbellGraphicId());
+		}
+
+		log.debug("Replaced teleport animation {}", animationId);
+	}
+
+	private boolean shouldOverride(int animationId)
+	{
+		if (AnimationConstants.isModernTeleport(animationId) && config.overrideModern())
+			return true;
+
+		if (AnimationConstants.isAncientTeleport(animationId) && config.overrideAncient())
+			return true;
+
+		if (AnimationConstants.isArceuusTeleport(animationId) && config.overrideArceuus())
+			return true;
+
+		if (AnimationConstants.isLunarTeleport(animationId) && config.overrideLunar())
+			return true;
+
+		return AnimationConstants.isTabTeleport(animationId) && config.overrideTabs();
+	}
+
+	@Subscribe
+	public void onSoundEffectPlayed(SoundEffectPlayed event)
+	{
+		if (!config.enabled() || !config.muteTeleportSound())
+			return;
+
+		if (event.getSource() != client.getLocalPlayer())
+			return;
+
+		if (TELEPORT_SOUND_IDS.contains(event.getSoundId()))
+		{
+			event.consume();
+			log.debug("Muted teleport sound {}", event.getSoundId());
+		}
+	}
+
+	@Subscribe
+	public void onAreaSoundEffectPlayed(AreaSoundEffectPlayed event)
+	{
+		if (!config.enabled() || !config.muteTeleportSound())
+			return;
+
+		if (TELEPORT_SOUND_IDS.contains(event.getSoundId()))
+		{
+			event.consume();
+			log.debug("Muted area teleport sound {}", event.getSoundId());
 		}
 	}
 
