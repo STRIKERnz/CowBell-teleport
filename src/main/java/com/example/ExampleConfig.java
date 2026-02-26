@@ -18,38 +18,6 @@ public interface ExampleConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "cowbellAnimationId",
-		name = "Cowbell Animation ID",
-		description = "Animation ID to use for cowbell teleport replacement"
-	)
-	default int cowbellAnimationId()
-	{
-		return AnimationConstants.COWBELL_TELEPORT;
-	}
-
-	@ConfigItem(
-		keyName = "showTeleportGraphic",
-		name = "Show teleport graphic (milk)",
-		description = "Show the teleport graphic (like the milk splash) when replacing the animation"
-	)
-	default boolean showTeleportGraphic()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "cowbellGraphicId",
-		name = "Cowbell Graphic ID",
-		description = "Spot animation / graphic ID to show when replacing teleport (milk splash)"
-	)
-	default int cowbellGraphicId()
-	{
-		// Use the actual in-game splash ID discovered: 3603
-		return 3603;
-	}
-
-	// Group toggles so users can pick which teleport types to override
-	@ConfigItem(
 		keyName = "overrideNormal",
 		name = "Override Normal Teleports",
 		description = "Replace normal spellbook teleport animations (home, varrock, lumbridge, etc.)"
