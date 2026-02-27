@@ -7,8 +7,9 @@ A RuneLite plugin that replaces all teleport animations with the cowbell amulet 
 - Works with spellbook, Ancient spellbook, Arceuus spellbook, Lunar spellbook, jewelry, and teleport tabs
 
 ## How to Use
-1. Install the plugin in RuneLite pluging hub
+1. Install the plugin in RuneLite plugin hub
 2. Open the plugin settings
+3. Configure to your liking
 4. Enjoy your new teleport animations!
 
 ## Supported Teleports
