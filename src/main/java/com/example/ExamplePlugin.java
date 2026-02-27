@@ -52,6 +52,7 @@ public class ExamplePlugin extends Plugin
 		tmp.add(AnimationConstants.TAB_TELEPORT_SOUND);
 		tmp.add(AnimationConstants.TELEPORT_SCROLLS_SOUND);
 		tmp.add(AnimationConstants.ECTOPHIAL_TELEPORT_SOUND);
+		tmp.add(AnimationConstants.ARDOUGNE_TELEPORT_SOUND);
 		OVERRIDE_SOUND_IDS = java.util.Collections.unmodifiableSet(tmp);
 	}
 
@@ -235,6 +236,21 @@ public class ExamplePlugin extends Plugin
 				playSoundOnce(AnimationConstants.TAB_TELEPORT_SOUND);
 			}
 		}
+		else if (selected == TeleportAnimation.ARDOUGNE)
+		{
+			if (AnimationConstants.ARDOUGNE_TELEPORT_GRAPHIC != -1)
+			{
+				player.setGraphic(AnimationConstants.ARDOUGNE_TELEPORT_GRAPHIC);
+			}
+			if (originalSound != -1 && config.muteTeleportSound())
+			{
+				mutedSoundUntilTick.put(originalSound, client.getTickCount() + 1);
+			}
+			if (AnimationConstants.ARDOUGNE_TELEPORT_SOUND != -1)
+			{
+				playSoundOnce(AnimationConstants.ARDOUGNE_TELEPORT_SOUND);
+			}
+		}
 	}
 
 	private void playSoundOnce(int soundId)
@@ -269,6 +285,8 @@ public class ExamplePlugin extends Plugin
 			return AnimationConstants.TELEPORT_SCROLLS_SOUND;
 		if (AnimationConstants.isEctophialTeleport(animationId))
 			return AnimationConstants.ECTOPHIAL_TELEPORT_SOUND;
+		if (AnimationConstants.isArdougneTeleport(animationId))
+			return AnimationConstants.ARDOUGNE_TELEPORT_SOUND;
 		return -1;
 	}
 
@@ -332,6 +350,9 @@ public class ExamplePlugin extends Plugin
 			return true;
 
 		if (AnimationConstants.isEctophialTeleport(animationId) && config.overrideEctophial())
+			return true;
+
+		if (AnimationConstants.isArdougneTeleport(animationId) && config.overrideArdougne())
 			return true;
 
 		return AnimationConstants.isTabTeleport(animationId) && config.overrideTabs();

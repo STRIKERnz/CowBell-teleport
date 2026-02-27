@@ -7,6 +7,15 @@ import net.runelite.client.config.ConfigItem;
 @ConfigGroup("cowbell")
 public interface ExampleConfig extends Config
 {
+	@ConfigItem(
+			keyName = "overrideAnimationType",
+			name = "Override With",
+			description = "Select which teleport animation to use when overriding teleports"
+	)
+	default TeleportAnimation teleportAnimation()
+	{
+		return TeleportAnimation.COWBELL;
+	}
 
 	@ConfigItem(
 		keyName = "overrideNormalandJewellery",
@@ -75,15 +84,6 @@ public interface ExampleConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-		keyName = "overrideAnimationType",
-		name = "Override With",
-		description = "Select which teleport animation to use when overriding teleports"
-	)
-	default TeleportAnimation teleportAnimation()
-	{
-		return TeleportAnimation.COWBELL;
-	}
 
 	@ConfigItem(
 		keyName = "overrideEctophial",
@@ -91,6 +91,16 @@ public interface ExampleConfig extends Config
 		description = "Replace Ectophial teleport animations"
 	)
 	default boolean overrideEctophial()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "overrideArdougne",
+		name = "Ardougne Cape Teleports",
+		description = "Replace Ardougne cape teleport animations"
+	)
+	default boolean overrideArdougne()
 	{
 		return true;
 	}

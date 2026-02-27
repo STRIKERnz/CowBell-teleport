@@ -10,7 +10,8 @@ public enum TeleportAnimation
 	LUNAR(AnimationConstants.LUNAR_TELEPORT, "Lunar"),
 	TAB(AnimationConstants.TAB_TELEPORT, "Tab"),
 	SCROLL(AnimationConstants.TELEPORT_SCROLLS, "Scroll"),
-	ECTOPHIAL(AnimationConstants.ECTOPHIAL_TELEPORT, "Ectophial");
+	ECTOPHIAL(AnimationConstants.ECTOPHIAL_TELEPORT, "Ectophial"),
+	ARDOUGNE(AnimationConstants.ARDOUGNE_TELEPORT, "Ardougne Cape");
 
 	private final int animationId;
 	private final String name;
