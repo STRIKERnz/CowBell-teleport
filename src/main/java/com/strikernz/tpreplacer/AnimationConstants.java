@@ -1,12 +1,10 @@
 package com.strikernz.tpreplacer;
 
-import java.util.Set;
-
 public final class AnimationConstants
 {
 	public static final int COWBELL_TELEPORT = 13811;
 	public static final int COWBELL_TELEPORT_GRAPHIC = 3603;
-	public static final int COWBELL_ARRIVAL_SOUND = 11286; // existing cowbell arrival sound id
+	public static final int COWBELL_ARRIVAL_SOUND = 11286;
 
 	public static final int STANDARD_AND_JEWELLERY_TELEPORT = 714;
 	public static final int STANDARD_TELEPORT_GRAPHIC = 111;
@@ -44,59 +42,11 @@ public final class AnimationConstants
 	public static final int DESERT_AMULET_TELEPORT_GRAPHIC = 284;
 	public static final int DESERT_AMULET_TELEPORT_SOUND = 200;
 
-
-
-	private static final Set<Integer> ALL_TELEPORTS = Set.of(
-			STANDARD_AND_JEWELLERY_TELEPORT,
-			ANCIENT_TELEPORT,
-			ARCEUUS_TELEPORT,
-			LUNAR_TELEPORT,
-			TAB_TELEPORT,
-			TELEPORT_SCROLLS,
-			ECTOPHIAL_TELEPORT,
-			ARDOUGNE_TELEPORT,
-			DESERT_AMULET_TELEPORT
-	);
-
 	private AnimationConstants() {}
 
+	/** Returns true if the given animation ID is any known teleport animation. */
 	public static boolean isTeleportAnimation(int animationId)
 	{
-		return ALL_TELEPORTS.contains(animationId);
+		return TeleportAnimation.fromAnimationId(animationId) != null;
 	}
-
-	public static boolean isStandardTeleport(int animationId)
-	{
-		return animationId == STANDARD_AND_JEWELLERY_TELEPORT;
-	}
-
-	public static boolean isAncientTeleport(int animationId)
-	{
-		return animationId == ANCIENT_TELEPORT;
-	}
-
-	public static boolean isArceuusTeleport(int animationId)
-	{
-		return animationId == ARCEUUS_TELEPORT;
-	}
-
-	public static boolean isLunarTeleport(int animationId)
-	{
-		return animationId == LUNAR_TELEPORT;
-	}
-
-	public static boolean isTabTeleport(int animationId)
-	{
-		return animationId == TAB_TELEPORT;
-	}
-
-	public static boolean isTeleportScroll(int animationId){ return animationId == TELEPORT_SCROLLS;}
-
-	public static boolean isEctophialTeleport(int animationId){ return animationId == ECTOPHIAL_TELEPORT;}
-
-	public static boolean isArdougneTeleport(int animationId){ return animationId == ARDOUGNE_TELEPORT;}
-
-	public static boolean isDesertAmuletTeleport(int animationId){ return animationId == DESERT_AMULET_TELEPORT;}
-
 }
-
