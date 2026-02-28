@@ -41,7 +41,7 @@ public final class AnimationConstants
 	public static final int ARDOUGNE_TELEPORT_SOUND = 200;
 
 	public static final int DESERT_AMULET_TELEPORT = 9606;
-	public static final int DESERT_AMULET_TELEPORT_GRAPHIC = 1684;
+	public static final int DESERT_AMULET_TELEPORT_GRAPHIC = 284;
 	public static final int DESERT_AMULET_TELEPORT_SOUND = 200;
 
 
@@ -65,7 +65,7 @@ public final class AnimationConstants
 		return ALL_TELEPORTS.contains(animationId);
 	}
 
-	public static boolean isModernTeleport(int animationId)
+	public static boolean isStandardTeleport(int animationId)
 	{
 		return animationId == STANDARD_AND_JEWELLERY_TELEPORT;
 	}

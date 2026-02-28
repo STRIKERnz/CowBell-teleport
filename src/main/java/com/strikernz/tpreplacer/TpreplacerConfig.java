@@ -3,15 +3,30 @@ package com.strikernz.tpreplacer;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigSection;
 
 @ConfigGroup("cowbell")
 public interface TpreplacerConfig extends Config
 {
+	@ConfigSection(
+		name = "All",
+		description = "Global override settings applied when per-teleport is set to Default",
+		position = 0
+	)
+	String allSection = "all";
+
+	// Single collapsible section for all per-teleport overrides so they can be collapsed together
+	@ConfigSection(name = "Per Teleport",
+		description = "Per-teleport override settings. Set to 'Default' to use the global setting",
+		position = 1)
+	String perSection = "per";
+
 	@ConfigItem(
 		keyName = "overrideAnimationType",
-		name = "Override With",
+		name = "Override all",
 		description = "Select which teleport animation to use when overriding teleports",
-		position = 0
+		position = 0,
+		section = allSection
 	)
 	default TeleportAnimation teleportAnimation()
 	{
@@ -19,109 +34,96 @@ public interface TpreplacerConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "overrideNormalandJewellery",
-		name = "Normal Teleports and Jewellery",
-		description = "Replace normal spellbook teleport animations and Jewellery (varrock, lumbridge, etc.)",
-		position = 1
-	)
-	default boolean overrideNormal()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "overrideAncient",
-		name = "Ancient Spellbook Teleports",
-		description = "Replace ancient spellbook teleport animations",
-		position = 2
-	)
-	default boolean overrideAncient()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "overrideArceuus",
-		name = "Arceuus Teleports",
-		description = "Replace Arceuus spellbook teleport animations",
-		position = 3
-	)
-	default boolean overrideArceuus()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "overrideLunar",
-		name = "Lunar Teleports",
-		description = "Replace Lunar spellbook teleport animations",
-		position = 4
-	)
-	default boolean overrideLunar()
-	{
-		return true;
-	}
-	
-	@ConfigItem(
-		keyName = "overrideTabs",
-		name = "Teleport Tabs",
-		description = "Replace teleport tab animations",
-		position = 5
-	)
-	default boolean overrideTabs()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "overrideScrolls",
-		name = "Teleport Scrolls",
-		description = "Replace teleport scroll animations",
-		position = 6
-	)
-	default boolean overrideScrolls() {return true;}
-
-	@ConfigItem(
 		keyName = "muteTeleportSound",
 		name = "Mute Teleport Sound",
-		description = "Suppress the teleport sound when the plugin replaces the animation",
-		position = 7
+		description = "Suppress the default teleport sound when the plugin replaces the animation",
+		position = 1,
+		section = allSection
 	)
 	default boolean muteTeleportSound()
 	{
 		return true;
 	}
 
+	// Per-teleport configuration. DEFAULT means use the global setting above. All are in the single perSection
 	@ConfigItem(
-		keyName = "overrideEctophial",
-		name = "Ectophial Teleports",
-		description = "Replace Ectophial teleport animations",
-		position = 8
+		keyName = "per_overrideNormal",
+		name = "Normal and jewellery",
+		description = "Per-teleport animation for normal teleports (Default uses global setting)",
+		position = 0,
+		section = perSection
 	)
-	default boolean overrideEctophial()
-	{
-		return true;
-	}
+	default TeleportAnimation perOverrideNormal() { return TeleportAnimation.DEFAULT; }
 
 	@ConfigItem(
-		keyName = "overrideArdougne",
-		name = "Ardougne Cape Teleport",
-		description = "Replace Ardougne cape teleport animations",
-		position = 9
+		keyName = "per_overrideAncient",
+		name = "Ancient",
+		description = "Per-teleport animation for ancient teleports (Default uses global setting)",
+		position = 1,
+		section = perSection
 	)
-	default boolean overrideArdougne()
-	{
-		return true;
-	}
+	default TeleportAnimation perOverrideAncient() { return TeleportAnimation.DEFAULT; }
 
 	@ConfigItem(
-		keyName = "overrideDesertAmulet",
-		name = "Desert Amulet Teleports",
-		description = "Replace Desert Amulet teleport animations",
-		position = 10
+		keyName = "per_overrideArceuus",
+		name = "Arceuus",
+		description = "Per-teleport animation for arceuus teleports (Default uses global setting)",
+		position = 2,
+		section = perSection
 	)
-	default boolean overrideDesertAmulet()
-	{
-		return true;
-	}
+	default TeleportAnimation perOverrideArceuus() { return TeleportAnimation.DEFAULT; }
+
+	@ConfigItem(
+		keyName = "per_overrideLunar",
+		name = "Lunar",
+		description = "Per-teleport animation for lunar teleports (Default uses global setting)",
+		position = 3,
+		section = perSection
+	)
+	default TeleportAnimation perOverrideLunar() { return TeleportAnimation.DEFAULT; }
+
+	@ConfigItem(
+		keyName = "per_overrideTabs",
+		name = "Tabs",
+		description = "Per-teleport animation for teleport tabs (Default uses global setting)",
+		position = 4,
+		section = perSection
+	)
+	default TeleportAnimation perOverrideTabs() { return TeleportAnimation.DEFAULT; }
+
+	@ConfigItem(
+		keyName = "per_overrideScrolls",
+		name = "Scrolls",
+		description = "Per-teleport animation for teleport scrolls (Default uses global setting)",
+		position = 5,
+		section = perSection
+	)
+	default TeleportAnimation perOverrideScrolls() { return TeleportAnimation.DEFAULT; }
+
+	@ConfigItem(
+		keyName = "per_overrideEctophial",
+		name = "Ectophial",
+		description = "Per-teleport animation for ectophial teleports (Default uses global setting)",
+		position = 6,
+		section = perSection
+	)
+	default TeleportAnimation perOverrideEctophial() { return TeleportAnimation.DEFAULT; }
+
+	@ConfigItem(
+		keyName = "per_overrideArdougne",
+		name = "Ardougne Cape",
+		description = "Per-teleport animation for ardougne teleports (Default uses global setting)",
+		position = 7,
+		section = perSection
+	)
+	default TeleportAnimation perOverrideArdougne() { return TeleportAnimation.DEFAULT; }
+
+	@ConfigItem(
+		keyName = "per_overrideDesertAmulet",
+		name = "Desert Amulet",
+		description = "Per-teleport animation for desert amulet teleports (Default uses global setting)",
+		position = 8,
+		section = perSection
+	)
+	default TeleportAnimation perOverrideDesertAmulet() { return TeleportAnimation.DEFAULT; }
 }

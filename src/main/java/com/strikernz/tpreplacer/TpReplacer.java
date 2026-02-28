@@ -92,8 +92,10 @@ public class TpReplacer extends Plugin
 		// Handle the special cowbell flow where we wait for animation -1 to set arrival
 		handleCowbellArrival(player, animationId);
 
+		// Determine selected override for this specific teleport animation (per-teleport then global)
+		TeleportAnimation selected = getSelectedForAnimation(animationId);
+
 		// If selected override is NONE, do nothing
-		TeleportAnimation selected = config.teleportAnimation();
 		if (selected == TeleportAnimation.NONE)
 			return;
 
@@ -103,10 +105,6 @@ public class TpReplacer extends Plugin
 
 		// Only react to known teleport animations
 		if (!AnimationConstants.isTeleportAnimation(animationId))
-			return;
-
-		// Respect granular config toggles as before
-		if (!shouldOverride(animationId))
 			return;
 
 		// Figure out the original sound for this teleport so we can mute it if needed
@@ -283,7 +281,7 @@ public class TpReplacer extends Plugin
 
 	private int getOriginalSoundForTeleport(int animationId)
 	{
-		if (AnimationConstants.isModernTeleport(animationId))
+		if (AnimationConstants.isStandardTeleport(animationId))
 			return AnimationConstants.STANDARD_TELEPORT_SOUND;
 		if (AnimationConstants.isAncientTeleport(animationId))
 			return AnimationConstants.ANCIENT_TELEPORT_SOUND;
@@ -346,34 +344,6 @@ public class TpReplacer extends Plugin
 		}
 	}
 
-	private boolean shouldOverride(int animationId)
-	{
-		if (AnimationConstants.isModernTeleport(animationId) && config.overrideNormal())
-			return true;
-
-		if (AnimationConstants.isAncientTeleport(animationId) && config.overrideAncient())
-			return true;
-
-		if (AnimationConstants.isArceuusTeleport(animationId) && config.overrideArceuus())
-			return true;
-
-		if (AnimationConstants.isLunarTeleport(animationId) && config.overrideLunar())
-			return true;
-
-		if (AnimationConstants.isTeleportScroll(animationId) && config.overrideScrolls())
-			return true;
-
-		if (AnimationConstants.isEctophialTeleport(animationId) && config.overrideEctophial())
-			return true;
-
-		if (AnimationConstants.isArdougneTeleport(animationId) && config.overrideArdougne())
-			return true;
-
-		if (AnimationConstants.isDesertAmuletTeleport(animationId) && config.overrideDesertAmulet())
-			return true;
-
-		return AnimationConstants.isTabTeleport(animationId) && config.overrideTabs();
-	}
 
 	@Subscribe
 	public void onSoundEffectPlayed(SoundEffectPlayed event)
@@ -420,5 +390,77 @@ public class TpReplacer extends Plugin
 	TpreplacerConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(TpreplacerConfig.class);
+	}
+
+	// Resolve per-teleport selection. If per-config is DEFAULT, fall back to global config.teleportAnimation().
+	private TeleportAnimation getSelectedForAnimation(int animationId)
+	{
+		TeleportAnimation per;
+
+		if (AnimationConstants.isStandardTeleport(animationId))
+		{
+			per = config.perOverrideNormal();
+			if (per != TeleportAnimation.DEFAULT) return per;
+			return config.teleportAnimation();
+		}
+
+		if (AnimationConstants.isAncientTeleport(animationId))
+		{
+			per = config.perOverrideAncient();
+			if (per != TeleportAnimation.DEFAULT) return per;
+			return config.teleportAnimation();
+		}
+
+		if (AnimationConstants.isArceuusTeleport(animationId))
+		{
+			per = config.perOverrideArceuus();
+			if (per != TeleportAnimation.DEFAULT) return per;
+			return config.teleportAnimation();
+		}
+
+		if (AnimationConstants.isLunarTeleport(animationId))
+		{
+			per = config.perOverrideLunar();
+			if (per != TeleportAnimation.DEFAULT) return per;
+			return config.teleportAnimation();
+		}
+
+		if (AnimationConstants.isTabTeleport(animationId))
+		{
+			per = config.perOverrideTabs();
+			if (per != TeleportAnimation.DEFAULT) return per;
+			return config.teleportAnimation();
+		}
+
+		if (AnimationConstants.isTeleportScroll(animationId))
+		{
+			per = config.perOverrideScrolls();
+			if (per != TeleportAnimation.DEFAULT) return per;
+			return config.teleportAnimation();
+		}
+
+		if (AnimationConstants.isEctophialTeleport(animationId))
+		{
+			per = config.perOverrideEctophial();
+			if (per != TeleportAnimation.DEFAULT) return per;
+			return config.teleportAnimation();
+		}
+
+		if (AnimationConstants.isArdougneTeleport(animationId))
+		{
+			per = config.perOverrideArdougne();
+			if (per != TeleportAnimation.DEFAULT) return per;
+			return config.teleportAnimation();
+		}
+
+		if (AnimationConstants.isDesertAmuletTeleport(animationId))
+		{
+			per = config.perOverrideDesertAmulet();
+			if (per != TeleportAnimation.DEFAULT) return per;
+			return config.teleportAnimation();
+		}
+
+		// Default fallback
+		return config.teleportAnimation();
 	}
 }

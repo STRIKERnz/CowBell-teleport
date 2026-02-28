@@ -2,6 +2,7 @@ package com.strikernz.tpreplacer;
 
 public enum TeleportAnimation
 {
+	DEFAULT(-2, "Default (Use Global)"),
 	NONE(-1, "None"),
 	COWBELL(AnimationConstants.COWBELL_TELEPORT, "Cowbell Amulet"),
 	STANDARD(AnimationConstants.STANDARD_AND_JEWELLERY_TELEPORT, "Standard / Jewellery"),
