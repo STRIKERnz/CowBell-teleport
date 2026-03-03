@@ -1,12 +1,14 @@
 package com.strikernz.tpreplacer;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public enum TeleportAnimation
 {
-	DEFAULT(-2, -1, -1, "Default (Use Global)"),
-	NONE(-1, -1, -1, "None"),
+	NONE(-1, -1, -1, "None (Use Global)"),
+	CUSTOM(-1, -1, -1, "Custom"),
 	COWBELL(AnimationConstants.COWBELL_TELEPORT, AnimationConstants.COWBELL_TELEPORT_GRAPHIC, -1, "Cowbell Amulet"),
 	STANDARD(AnimationConstants.STANDARD_AND_JEWELLERY_TELEPORT, AnimationConstants.STANDARD_TELEPORT_GRAPHIC, AnimationConstants.STANDARD_TELEPORT_SOUND, "Standard / Jewellery"),
 	ANCIENT(AnimationConstants.ANCIENT_TELEPORT, AnimationConstants.ANCIENT_TELEPORT_GRAPHIC, AnimationConstants.ANCIENT_TELEPORT_SOUND, "Ancient"),
@@ -31,9 +33,12 @@ public enum TeleportAnimation
 		}
 	}
 
-	private final int animationId;
-	private final int graphicId;
-	private final int soundId;
+	@Getter
+    private final int animationId;
+	@Getter
+    private final int graphicId;
+	@Getter
+    private final int soundId;
 	private final String name;
 
 	TeleportAnimation(int animationId, int graphicId, int soundId, String name)
@@ -44,22 +49,6 @@ public enum TeleportAnimation
 		this.name = name;
 	}
 
-	public int getAnimationId()
-	{
-		return animationId;
-	}
-
-	public int getGraphicId()
-	{
-		return graphicId;
-	}
-
-	public int getSoundId()
-	{
-		return soundId;
-	}
-
-	/** Returns the TeleportAnimation whose native animation ID matches, or {@code null} if not found. */
 	public static TeleportAnimation fromAnimationId(int animationId)
 	{
 		return BY_ANIMATION_ID.get(animationId);

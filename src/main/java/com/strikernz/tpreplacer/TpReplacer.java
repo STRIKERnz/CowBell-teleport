@@ -76,7 +76,8 @@ public class TpReplacer extends Plugin
 
 		TeleportAnimation selected = getSelectedForAnimation(animationId);
 
-		if (selected == TeleportAnimation.NONE || selected == TeleportAnimation.DEFAULT)
+		// NONE on the global setting means do nothing
+		if (selected == TeleportAnimation.NONE)
 			return;
 
 		// Already playing the target animation — nothing to do
@@ -97,6 +98,20 @@ public class TpReplacer extends Plugin
 			teleporting = true;
 			player.setAnimation(AnimationConstants.COWBELL_TELEPORT);
 			player.setGraphic(AnimationConstants.COWBELL_TELEPORT_GRAPHIC);
+			return;
+		}
+
+		if (selected == TeleportAnimation.CUSTOM)
+		{
+			TeleportAnimation source = TeleportAnimation.fromAnimationId(animationId);
+			int[] ids = getCustomIds(source);
+			int anim  = ids[0];
+			int gfx   = ids[1];
+			int sound = ids[2];
+
+			if (anim != -1)  player.setAnimation(anim);
+			if (gfx  != -1)  player.setGraphic(gfx);
+			if (sound != -1) playSoundOnce(sound);
 			return;
 		}
 
@@ -187,7 +202,7 @@ public class TpReplacer extends Plugin
 		return configManager.getConfig(TpreplacerConfig.class);
 	}
 
-	// Resolve the override for a given animation ID, falling back to the global setting when per-teleport is DEFAULT
+	// Resolve the override for a given animation ID, falling back to the global setting when per-teleport is NONE
 	private TeleportAnimation getSelectedForAnimation(int animationId)
 	{
 		TeleportAnimation source = TeleportAnimation.fromAnimationId(animationId);
@@ -197,19 +212,54 @@ public class TpReplacer extends Plugin
 		TeleportAnimation per;
 		switch (source)
 		{
-			case STANDARD:      per = config.perOverrideNormal();      break;
-			case ANCIENT:       per = config.perOverrideAncient();     break;
-			case ARCEUUS:       per = config.perOverrideArceuus();     break;
-			case LUNAR:         per = config.perOverrideLunar();       break;
-			case TAB:           per = config.perOverrideTabs();        break;
-			case SCROLL:        per = config.perOverrideScrolls();     break;
-			case ECTOPHIAL:     per = config.perOverrideEctophial();   break;
-			case ARDOUGNE:      per = config.perOverrideArdougne();    break;
+			case STANDARD:      per = config.perOverrideNormal();        break;
+			case ANCIENT:       per = config.perOverrideAncient();       break;
+			case ARCEUUS:       per = config.perOverrideArceuus();       break;
+			case LUNAR:         per = config.perOverrideLunar();         break;
+			case TAB:           per = config.perOverrideTabs();          break;
+			case SCROLL:        per = config.perOverrideScrolls();       break;
+			case ECTOPHIAL:     per = config.perOverrideEctophial();     break;
+			case ARDOUGNE:      per = config.perOverrideArdougne();      break;
 			case DESERT_AMULET: per = config.perOverrideDesertAmulet(); break;
 			default:            return config.teleportAnimation();
 		}
 
-		return (per != TeleportAnimation.DEFAULT) ? per : config.teleportAnimation();
+		return (per != TeleportAnimation.NONE) ? per : config.teleportAnimation();
+	}
+
+	// Returns [animId, gfxId, soundId] for the CUSTOM option for a given source teleport type
+	private int[] getCustomIds(TeleportAnimation source)
+	{
+		if (source == null) return new int[]{-1, -1, -1};
+		String raw;
+		switch (source)
+		{
+			case STANDARD:      raw = config.customNormal();       break;
+			case ANCIENT:       raw = config.customAncient();      break;
+			case ARCEUUS:       raw = config.customArceuus();      break;
+			case LUNAR:         raw = config.customLunar();        break;
+			case TAB:           raw = config.customTabs();         break;
+			case SCROLL:        raw = config.customScrolls();      break;
+			case ECTOPHIAL:     raw = config.customEctophial();    break;
+			case ARDOUGNE:      raw = config.customArdougne();     break;
+			case DESERT_AMULET: raw = config.customDesertAmulet(); break;
+			default:            return new int[]{-1, -1, -1};
+		}
+		return parseCustomIds(raw);
+	}
+
+	// Parses "animId,gfxId,soundId" — returns [-1,-1,-1] on any parse error
+	private static int[] parseCustomIds(String raw)
+	{
+		int[] result = {-1, -1, -1};
+		if (raw == null || raw.isBlank()) return result;
+		String[] parts = raw.split(",", -1);
+		for (int i = 0; i < Math.min(parts.length, 3); i++)
+		{
+			try { result[i] = Integer.parseInt(parts[i].trim()); }
+			catch (NumberFormatException ignored) {}
+		}
+		return result;
 	}
 
 	private void playSoundOnce(int soundId)
