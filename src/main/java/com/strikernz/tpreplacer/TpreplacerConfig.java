@@ -64,4 +64,7 @@ public interface TpreplacerConfig extends Config
 
 	@ConfigItem(keyName = "per_overrideDesertAmulet", name = "Desert Amulet",        description = "Per-teleport animation (None uses global setting)", position = 8, section = perSection)
 	default TeleportAnimation perOverrideDesertAmulet() { return TeleportAnimation.NONE; }
+
+	@ConfigItem(keyName = "per_overrideGiantsoulAmulet", name = "Giantsoul Amulet", description = "Per-teleport animation (None uses global setting)", position = 9, section = perSection)
+	default TeleportAnimation perOverrideGiantsoulAmulet() { return TeleportAnimation.NONE; }
 }

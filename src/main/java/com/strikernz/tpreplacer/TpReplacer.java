@@ -290,6 +290,9 @@ public class TpReplacer extends Plugin
 			case DESERT_AMULET:
 				perOverride = config.perOverrideDesertAmulet();
 				break;
+			case GIANTSOUL_AMULET:
+				perOverride = config.perOverrideGiantsoulAmulet();
+				break;
 			default:
 				return config.teleportAnimation();
 		}
