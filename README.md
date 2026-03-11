@@ -13,6 +13,7 @@ A RuneLite plugin that replaces teleport animations with an alternative animatio
   - Ectophial teleport
   - Ardougne Cape teleport
   - Desert Amulet teleport
+  - Giantsoul Amulet teleport
 
 ## Default behavior
 By default the plugin replaces all teleports with the Cowbell Amulet animation.
