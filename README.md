@@ -26,5 +26,5 @@ Open the plugin settings in RuneLite and configure:
 ## Notes
 - This plugin is cosmetic only — it does not change teleport mechanics.
 
-## Version
-Current version 1.0 
+## Version - see changelog for changes
+Current version 1.0.1
